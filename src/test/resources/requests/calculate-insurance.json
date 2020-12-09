@@ -1,0 +1,21 @@
+{
+  "policyNumber": "LV00-00-000000-1",
+  "policyStatus": "REGISTERED",
+  "policyObjectList": [
+    {
+      "objectName": "policyObject1",
+      "policySubObjectList": [
+        {
+          "subObjectName": "policySubObject1",
+          "sumInsurance": 100.0,
+          "riskType": "FIRE"
+        },
+        {
+          "subObjectName": "policySubObject2",
+          "sumInsurance": 8.0,
+          "riskType": "THEFT"
+        }
+      ]
+    }
+  ]
+}
