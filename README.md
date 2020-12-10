@@ -1,10 +1,5 @@
 # insurance-calculator
 Spring Boot RESTful Web Service for calculating insurance price
-# springboot-sample-app
-
-[![Build Status](https://travis-ci.org/codecentric/springboot-sample-app.svg?branch=master)](https://travis-ci.org/codecentric/springboot-sample-app)
-[![Coverage Status](https://coveralls.io/repos/github/viliokas/insurance-calculator/badge.svg?branch=main)](https://coveralls.io/github/viliokas/insurance-calculator?branch=main)
-
 ## Requirements
 
 For building and running the application you need:
