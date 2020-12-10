@@ -1,6 +1,5 @@
 package com.insurance.insurance.services;
 
-import com.insurance.insurance.controllers.InsuranceController;
 import com.insurance.insurance.enums.RiskType;
 import com.insurance.insurance.models.Policy;
 import com.insurance.insurance.models.response.PolicyPrice;
@@ -8,15 +7,13 @@ import com.insurance.insurance.utils.NumberFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class PremiumCalculatorService {
     Logger logger = LoggerFactory.getLogger(PremiumCalculatorService.class);
-    private String roundPattern = "0.00";
+    private final String ROUND_PATTERN = "0.00";
 
     /**
      * This is the insurance price premium policy calculator.
@@ -50,10 +47,10 @@ public class PremiumCalculatorService {
         Double calculatedPremiumTheft = sumInsuredTheft.get() * theftCoefficient;
         Double calculatedPremium = calculatedPremiumFire + calculatedPremiumTheft;
 
-        Double roundPremiumPrice = NumberFormat.roundDoubleHalfEven(calculatedPremium,roundPattern);
+        Double roundedPremiumPrice = NumberFormat.roundDoubleHalfEven(calculatedPremium,ROUND_PATTERN);
 
         return PolicyPrice.builder()
-                .price(roundPremiumPrice)
+                .price(roundedPremiumPrice)
                 .build();
     }
 }
