@@ -16,16 +16,14 @@ public class PremiumCalculatorService {
     private final String ROUND_PATTERN = "0.00";
 
     /**
-     * This is the insurance price premium policy calculator.
+     * Insurance price premium policy calculator.
      * @param policy Policy object.
      * @return PolicyPrice.
-     * @exception ParseException On input error.
      */
     public PolicyPrice calculate(Policy policy){
         logger.info("Calculating...");
         AtomicReference<Double> sumInsuredFire = new AtomicReference<>((double) 0);
         AtomicReference<Double> sumInsuredTheft = new AtomicReference<>((double) 0);
-
         // Sum up each PolicySubObject SumInsurance prices.
         policy.getPolicyObjectList().stream().forEach(policyObject -> {
             policyObject.getPolicySubObjectList().stream().forEach(policySubObject -> {
@@ -39,16 +37,14 @@ public class PremiumCalculatorService {
                 }
             });
         });
-
+        // Prepare coefficients for specified RiskType
         Double fireCoefficient = RiskType.getRiskTypeCoefficient(RiskType.FIRE.name(),sumInsuredFire.get());
         Double theftCoefficient = RiskType.getRiskTypeCoefficient(RiskType.THEFT.name(),sumInsuredTheft.get());
-
+        // Apply coefficients and calculate premium sum
         Double calculatedPremiumFire = sumInsuredFire.get() * fireCoefficient;
         Double calculatedPremiumTheft = sumInsuredTheft.get() * theftCoefficient;
         Double calculatedPremium = calculatedPremiumFire + calculatedPremiumTheft;
-
         Double roundedPremiumPrice = NumberFormat.roundDoubleHalfEven(calculatedPremium,ROUND_PATTERN);
-
         return PolicyPrice.builder()
                 .price(roundedPremiumPrice)
                 .build();
