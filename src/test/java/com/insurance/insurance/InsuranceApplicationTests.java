@@ -34,23 +34,11 @@ class InsuranceApplicationTests {
 	private ObjectMapper objectMapper;
 
 	@Test
-	void integrationOkTest() throws Exception {
+	void integrationTest() throws Exception {
 		PolicyPrice expectedResult = PolicyPrice.builder()
 				.price(2.28)
 				.build();
 
-		String testRequestContent = FileHelper.readRequestFileToString("calculate-insurance.json");
-		MvcResult result = mockMvc.perform(post("/api/calculate-insurance", 42L)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(testRequestContent))
-				.andExpect(status().isOk()).andReturn();
-
-		PolicyPrice price = objectMapper.readValue(result.getResponse().getContentAsString(),PolicyPrice.class);
-		assertThat(price).isEqualTo(expectedResult);
-	}
-
-	@Test
-	void integrationBadRequestTest() throws Exception {
 		PolicySubObject policySubObject1 = PolicySubObject.builder()
 				.riskType("FIREE")
 				.sumInsurance(100.00)
@@ -70,13 +58,25 @@ class InsuranceApplicationTests {
 				.policyStatus("REGISTERED")
 				.policyObjectList(List.of(policyObject1))
 				.build();
+		// Read request from file
+		String testRequestContent = FileHelper.readRequestFileToString("calculate-insurance.json");
 
-		MvcResult result = mockMvc.perform(post("/api/calculate-insurance", 42L)
+
+		// Prepare OK request
+		MvcResult result1 = mockMvc.perform(post("/api/calculate-insurance", 42L)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(testRequestContent))
+				.andExpect(status().isOk()).andReturn();
+		PolicyPrice price = objectMapper.readValue(result1.getResponse().getContentAsString(),PolicyPrice.class);
+		// Validate that result is correct
+		assertThat(price).isEqualTo(expectedResult);
+
+		// Prepare Bad Request
+		MvcResult result2 = mockMvc.perform(post("/api/calculate-insurance", 42L)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(policy)))
 				.andExpect(status().isBadRequest()).andReturn();
-
-		assertThat(result.getResponse().getContentAsString().contains("Risk type FIREE not found")).isEqualTo(true);
+		//Validate that thrown exception is correct
+		assertThat(result2.getResponse().getContentAsString().contains("Risk type FIREE not found")).isEqualTo(true);
 	}
-
 }
